@@ -26,27 +26,9 @@ const createDirectories = async () => {
 app.use(helmet());
 
 
-const allowedOrigins = [
-  'http://localhost:3000',         // React default
-  'http://localhost:5173',         // Vite default
-  'http://127.0.0.1:5173',         // Alternative localhost
-  'http://127.0.0.1:3000',     
-  'https://bulk-mailer-two.vercel.app/'    // Alternative localhost
-];
+app.use(cors({origin:"*"}));
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (e.g., mobile apps or curl)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
@@ -110,3 +92,4 @@ const startServer = async () => {
 };
 
 startServer();
+
